@@ -10,7 +10,7 @@
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
-      <a href="#certificates">Certificates</a>
+      <a href="#certificates">Certifications</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
@@ -18,6 +18,7 @@
 
 <main>
   <section class="home" id="home" aria-labelledby="home-title">
+    <div class="home-background" aria-hidden="true"></div>
     <div class="home-content">
       <p class="home-greeting">Hello it's</p>
 
@@ -29,6 +30,35 @@
         <span>Learning how systems work and how to protect them.</span>
         <span>Always curious, always learning.</span>
       </p>
+      <div class="home-actions">
+        <a class="home-button home-button-primary" href="#projects">
+          View Projects
+        </a>
+
+        <a
+          class="home-button home-button-outline"
+          href="{{ asset('files/juan-kairupan-cv.pdf') }}"
+          download="Juan-Kairupan-CV.pdf"
+        >
+          Download CV
+
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 3v12" />
+            <path d="m7 10 5 5 5-5" />
+            <path d="M5 16v4h14v-4" />
+          </svg>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -107,7 +137,7 @@
     <div class="wrap">
       <div class="block-head">
         <h2 class="block-title" id="certificates-title">
-          Certificates
+          Certifications
         </h2>
       </div>
 
@@ -182,11 +212,7 @@
     </a>
 
     <p class="footer-copyright">
-      © {{ date('Y') }} — Cybersecurity Portfolio
-    </p>
-
-    <p class="footer-tagline">
-      Learn. Explore. Protect.
+      © {{ date('Y') }} — Computer Science Student & Cybersecurity Enthusiast - Jakarta, Indonesia
     </p>
   </div>
 </footer>
