@@ -126,3 +126,80 @@ if (homeSection && homeBackground) {
   const backgroundObserver = new ResizeObserver(createDots);
   backgroundObserver.observe(homeBackground);
 }
+
+const scrollProgress = document.querySelector(".scroll-progress");
+
+if (scrollProgress) {
+  let progressFrame = null;
+
+  function updateProgress() {
+    progressFrame = null;
+
+    const page = document.documentElement;
+    const scrollableHeight = page.scrollHeight - page.clientHeight;
+
+    const progress = scrollableHeight > 0
+      ? Math.min(1, Math.max(0, window.scrollY / scrollableHeight))
+      : 0;
+
+    scrollProgress.style.transform = `scaleX(${progress})`;
+  }
+
+  function scheduleProgress() {
+    if (progressFrame !== null) return;
+
+    progressFrame = requestAnimationFrame(updateProgress);
+  }
+
+  window.addEventListener("scroll", scheduleProgress, { passive: true });
+  window.addEventListener("resize", scheduleProgress);
+  window.addEventListener("pageshow", scheduleProgress);
+
+  // Sesuaikan saat tinggi konten berubah, misalnya filter sertifikat.
+  const progressObserver = new ResizeObserver(scheduleProgress);
+  progressObserver.observe(document.body);
+
+  updateProgress();
+}
+
+// Project detail dialogs.
+const projectDialogs = document.querySelectorAll(".project-dialog");
+
+document.querySelectorAll("[data-project-open]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const dialog = document.getElementById(button.dataset.projectOpen);
+
+    if (!(dialog instanceof HTMLDialogElement) || dialog.open) return;
+
+    dialog.showModal();
+    document.documentElement.classList.add("project-modal-open");
+  });
+});
+
+projectDialogs.forEach((dialog) => {
+  dialog.querySelector("[data-project-close]")
+    ?.addEventListener("click", () => {
+      dialog.close();
+    });
+
+  // Klik area di luar panel untuk menutup.
+  dialog.addEventListener("click", (event) => {
+    if (event.target !== dialog) return;
+
+    const rect = dialog.getBoundingClientRect();
+    const outside =
+      event.clientX < rect.left ||
+      event.clientX > rect.right ||
+      event.clientY < rect.top ||
+      event.clientY > rect.bottom;
+
+    if (outside) dialog.close();
+  });
+
+  // Berlaku juga saat modal ditutup menggunakan Escape.
+  dialog.addEventListener("close", () => {
+    if (!document.querySelector(".project-dialog[open]")) {
+      document.documentElement.classList.remove("project-modal-open");
+    }
+  });
+});

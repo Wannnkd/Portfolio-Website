@@ -1,13 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="scroll-progress" aria-hidden="true"></div>
 
 <header class="site">
   <div class="nav-inner">
     <a href="#home" class="brand"><span class="dot"></span>Juan Kairupan</a>
     <nav class="links">
       <a href="#home">Home</a>
-      <a href="#about">About</a>
+      <a href="#about">About me</a>
       <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
       <a href="#certificates">Certifications</a>
@@ -65,7 +66,7 @@
   <section class="hero" id="about">
     <div class="wrap hero-grid">
       <div>
-        <h1 class="headline">About me</h1>
+        <h2 class="headline">About Me</h2>
         <p class="lede">Hello, I'm {{ $profile['name'] }}, a student from Bina Nusantara University, majoring in Computer Science, currently pursuing a career in cybersecurity: starting from network security, mobile application security, digital forensic, and cybersecurity mindset on how to attack and defense a system.</p>
         <div class="hero-actions">
           <a href="#projects" class="btn btn-primary">View Projects</a>
@@ -91,7 +92,7 @@
   <section class="block" id="skills">
     <div class="wrap">
       <div class="block-head">
-        <h1 class="block-title">Skills & Technologies</h1>
+        <h2 class="block-title">Skills & Technologies</h2>
         <p class="lede">Skills and tools i use to work with.</p>
       </div>
       <div class="skill-groups">
@@ -112,22 +113,112 @@
   <section class="block" id="projects">
     <div class="wrap">
       <div class="block-head">
-        <h2 class="block-title">Projects & experiment</h2>
+        <h2 class="block-title">Projects & experiments</h2>
       </div>
       <div class="project-list">
         @foreach ($projects as $project)
-        <div class="project-row">
-          <div>
-            <h3 class="project-title">{{ $project['title'] }}</h3>
-            <p class="project-desc">{{ $project['desc'] }}</p>
-            <div class="project-meta">
-              @foreach ($project['stack'] as $tech)
-                <span class="meta-chip">{{ $tech }}</span>
-              @endforeach
+          <article class="project-row">
+            <div class="project-copy">
+              <div class="project-heading">
+                <span class="project-number">
+                  {{ sprintf('%02d', $loop->iteration) }}
+                </span>
+
+                <span class="project-tag">{{ $project['tag'] }}</span>
+              </div>
+
+              <h3 class="project-title">{{ $project['title'] }}</h3>
+
+              <p class="project-timeline">
+                <span>{{ $project['year'] ?? 'Tahun belum diisi' }}</span>
+                <span>|</span>
+                <span>{{ $project['status'] ?? 'Status belum diisi' }}</span>
+              </p>
+
+              <p class="project-desc">{{ $project['desc'] }}</p>
+
+              <div class="project-meta">
+                @foreach ($project['stack'] as $tech)
+                  <span class="meta-chip">{{ $tech }}</span>
+                @endforeach
+              </div>
+
+              <button
+                class="project-details-button"
+                type="button"
+                data-project-open="project-dialog-{{ $loop->index }}"
+                aria-controls="project-dialog-{{ $loop->index }}"
+                aria-haspopup="dialog"
+              >
+                View Details
+                <span aria-hidden="true">↗</span>
+              </button>
             </div>
-          </div>
-          <span class="project-tag">{{ $project['tag'] }}</span>
-        </div>
+
+            <dialog
+              class="project-dialog"
+              id="project-dialog-{{ $loop->index }}"
+              aria-labelledby="project-dialog-title-{{ $loop->index }}"
+            >
+              <div class="project-dialog-header">
+                <span class="project-tag">{{ $project['tag'] }}</span>
+
+                <button
+                  class="project-dialog-close"
+                  type="button"
+                  data-project-close
+                  aria-label="Close project details"
+                  autofocus
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+
+              <h2 id="project-dialog-title-{{ $loop->index }}">
+                {{ $project['title'] }}
+              </h2>
+
+              <p class="project-timeline">
+                <span>{{ $project['year'] ?? 'Tahun belum diisi' }}</span>
+                <span>|</span>
+                <span>{{ $project['status'] ?? 'Status belum diisi' }}</span>
+              </p>
+
+              <div class="project-dialog-section">
+                <h3>Problem Statement</h3>
+                <p>{{ $project['problem'] ?? 'Problem statement belum diisi.' }}</p>
+              </div>
+
+              <div class="project-dialog-section">
+                <h3>Description</h3>
+                <p>{{ $project['details'] ?? $project['desc'] }}</p>
+              </div>
+
+              <div class="project-dialog-section">
+                <h3>Tech Stack</h3>
+
+                <div class="project-meta">
+                  @foreach ($project['stack'] as $tech)
+                    <span class="meta-chip">{{ $tech }}</span>
+                  @endforeach
+                </div>
+              </div>
+
+              @if (!empty($project['github']))
+                <div class="project-dialog-actions">
+                  <a
+                    class="project-github-button"
+                    href="{{ $project['github'] }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View on GitHub
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              @endif
+            </dialog>
+          </article>
         @endforeach
       </div>
     </div>
@@ -189,7 +280,7 @@
     <div class="wrap">
       <div class="contact-panel">
         <div>
-          <h2>Let's Connect</h2>
+          <h2>Let's build<br><span>something together.</span></h2>
           <p>Open to discussions, project collaboration, or sharing thoughts about computer science or cyber security.</p>
         </div>
         <div class="contact-links">
@@ -197,6 +288,7 @@
           <a class="contact-link" href="{{ $contact['href'] }}" target="_blank" rel="noopener">
             <span class="label">{{ $contact['label'] }}</span>
             <span class="value">{{ $contact['value'] }}</span>
+            <span class="contact-arrow" aria-hidden="true">↗</span>
           </a>
           @endforeach
         </div>
